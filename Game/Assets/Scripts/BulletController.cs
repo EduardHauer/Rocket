@@ -8,8 +8,8 @@ namespace Assets.Scripts
         public float Direction;
         public Vector2 OutOfBounds;
 
-        private Vector3 _position;
         private ObjectPooler _objectPooler;
+        private Vector3 _position;
 
         private void Start()
         {
@@ -19,19 +19,17 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
-            Debug.Log("ENABLED");
             _position = transform.position;
         }
 
         private void OnDisable()
         {
-            Debug.Log("DISABLED");
             _position = transform.position;
         }
 
         private void Update()
         {
-            Move(Direction);
+            Move(Direction * Speed);
             if (_position.x > OutOfBounds.y || _position.x < OutOfBounds.x)
                 _objectPooler.ReturnToPool("Bullets", gameObject);
             transform.position = new Vector3(Mathf.Round(_position.x * 16) / 16, Mathf.Round(_position.y * 16) / 16, Mathf.Round(_position.z * 16) / 16);
@@ -39,7 +37,7 @@ namespace Assets.Scripts
 
         public override void Move(float direction)
         {
-            _position += direction * Time.deltaTime * Speed * Vector3.right;
+            _position += direction * Time.deltaTime * Vector3.right;
         }
     }
 }

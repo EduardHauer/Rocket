@@ -24,7 +24,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: ceac5ae728e6c404aaca11d7f3a74ce8, type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap:
@@ -264,7 +264,7 @@ Material:
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
     - _Size: {r: 256, g: 192, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Speed: {r: 0.5, g: 0, b: 0, a: 0}
+    - _Speed: {r: 0.25, g: 0, b: 0, a: 0}
     - _StrechingVector: {r: 1, g: 0, b: 0, a: 0}
     - _Stretching: {r: 1, g: 1, b: 0, a: 0}
     - _ThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
@@ -272,5 +272,5 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
-    - _White: {r: 3.372549, g: 3.6705883, b: 4, a: 1}
+    - _White: {r: 6.78534, g: 7.371727, b: 7.999999, a: 1}
   m_BuildTextureStacks: []

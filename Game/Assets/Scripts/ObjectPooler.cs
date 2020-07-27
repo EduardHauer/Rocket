@@ -16,6 +16,7 @@ namespace Assets.Scripts
 
         public List<Pool> Pools;
         public Dictionary<string, Queue<GameObject>> PoolDictionary;
+        public Dictionary<string, List<GameObject>> OutOfPool;
 
         public static ObjectPooler Instance;
 
@@ -27,6 +28,7 @@ namespace Assets.Scripts
         private void Start()
         {
             PoolDictionary = new Dictionary<string, Queue<GameObject>>();
+            OutOfPool = new Dictionary<string, List<GameObject>>();
 
             foreach (Pool pool in Pools)
             {
@@ -40,6 +42,7 @@ namespace Assets.Scripts
                 }
 
                 PoolDictionary.Add(pool.tag, objectPool);
+                OutOfPool.Add(pool.tag, new List<GameObject>());
             }
         }
 
@@ -60,6 +63,7 @@ namespace Assets.Scripts
             obj.transform.position = position;
             obj.transform.rotation = rotation;
             obj.SetActive(true);
+            OutOfPool[tag].Add(obj);
 
             return obj;
         }
@@ -74,9 +78,9 @@ namespace Assets.Scripts
 
             obj.transform.position = Vector3.zero;
             obj.transform.rotation = Quaternion.identity;
-            Debug.Log(obj.transform.position);
             obj.SetActive(false);
             PoolDictionary[tag].Enqueue(obj);
+            OutOfPool[tag].Remove(obj);
         }
 
         public void AddToPool(string tag, int amount)
@@ -93,6 +97,19 @@ namespace Assets.Scripts
                 obj.SetActive(false);
                 PoolDictionary[tag].Enqueue(obj);
             }
+        }
+
+        public void AddOneToPool(string tag)
+        {
+            if (!PoolDictionary.ContainsKey(tag))
+            {
+                Debug.LogWarning($"Pool with tag {tag} doesn't exist.");
+                return;
+            }
+
+            GameObject obj = Instantiate(Pools[Pools.IDByTag(tag)].prefab);
+            obj.SetActive(false);
+            PoolDictionary[tag].Enqueue(obj);
         }
     }
 }

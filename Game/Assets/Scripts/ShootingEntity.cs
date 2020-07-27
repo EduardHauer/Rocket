@@ -8,6 +8,6 @@ namespace Assets.Scripts
 {
     public abstract class ShootingEntity : Entity
     {
-        public abstract void Shoot();
+        public abstract void Shoot(bool performed);
     }
 }
