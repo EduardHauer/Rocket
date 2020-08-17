@@ -8,12 +8,10 @@ namespace Assets.Scripts
     {
         public int MaxHP;
         public int CurrentHP;
-        public UnityEvent OnDamage;
+        public UnityEvent<int> OnDamage;
         public UnityEvent<GameObject> OnDeath;
-        public string PoolTag;
-        public string[] DamagerTag;
+        public string DamagerTag;
 
-        private ObjectPooler _objectPooler;
         private Renderer _renderer;
         private Coroutine _coroutine;
 
@@ -21,11 +19,6 @@ namespace Assets.Scripts
         {
             _renderer = GetComponent<Renderer>();
             CurrentHP = MaxHP;
-        }
-
-        private void Start()
-        {
-            _objectPooler = ObjectPooler.Instance;
         }
 
         private void OnEnable()
@@ -36,30 +29,23 @@ namespace Assets.Scripts
         public void GetDamage(int damage)
         {
             CurrentHP -= damage;
-            OnDamage.Invoke();
+            OnDamage.Invoke(damage);
             if (CurrentHP <= 0)
             {
                 if (_renderer != null)
                     _renderer.material.SetFloat("_Flash", 0);
                 CurrentHP = 0;
-                if (PoolTag != string.Empty)
-                    _objectPooler.ReturnToPool(PoolTag, gameObject);
                 OnDeath.Invoke(gameObject);
             }
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            foreach (string tag in DamagerTag)
+            if (collision.gameObject.tag == DamagerTag)
             {
-                if (collision.gameObject.tag == tag)
+                if (collision.gameObject.GetComponent<Damager>() != null)
                 {
-                    if (collision.gameObject.GetComponent<Damager>() != null)
-                    {
-                        GetDamage(collision.gameObject.GetComponent<Damager>().Damage);
-                    }
-                    //else
-                    break;
+                    GetDamage(collision.gameObject.GetComponent<Damager>().Damage);
                 }
             }
         }

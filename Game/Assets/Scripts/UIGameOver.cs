@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
@@ -40,13 +41,20 @@ namespace Assets.Scripts
         public void GameOver()
         {
             _gameOver = true;
+            //Menu.AnyOpen = true;
+        }
+
+        public void Restart(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                Restart();
         }
 
         public void Restart()
         {
-            Debug.Log("+++");
             if (_canRestart)
             {
+                //Menu.AnyOpen = false;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }

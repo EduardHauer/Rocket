@@ -1,82 +1,57 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Assets.Scripts
 {
-    public class PlayerController : ShootingEntity
+    public class PlayerController : Entity
     {
         //public static PlayerController Instance;
 
-        public float Step = 1;
+        public float Speed = 1;
+        public Animator Animator;
         public Vector2 Clamp;
         public Transform BulletSpawner;
         public HealthController HealthController;
         public Renderer HealthSprite;
-        public Menu PauseMenu;
-        public Menu StatMenu;
+        public UIMenuController PauseMenu;
+        public UIMenuController StatMenu;
 
-        private ObjectPooler _objectPooler;
-        private InputController _inputController;
-        private StatController _statController;
-        private float _lastDirection;
-        private bool _lastPerformerd;
-        private float _t;
+        private float _direction;
+        private Vector2 _position;
 
         private void Awake()
         {
             //Instance = this;
             HealthUpdate();
-        }
-
-        private void Start()
-        {
-            _objectPooler = ObjectPooler.Instance;
-            _inputController = InputController.Instance;
-            _statController = StatController.Instance;
+            _position = transform.position;
         }
 
         private void Update()
         {
-            if (_t > 0)
-                _t -= Time.deltaTime;
-            else
-                _t = 0;
-            if (PauseMenu.Open || StatMenu.Open)
-                _t = .1f;
+            _position = new Vector2(_position.x, Mathf.Clamp(_position.y + _direction * Speed * Time.deltaTime, Clamp.x, Clamp.y));
+            transform.position = new Vector3(Mathf.Round(_position.x * 16) / 16, Mathf.Round(_position.y * 16) / 16, transform.position.z);
+        }
+
+        public void Move(InputAction.CallbackContext context)
+        {
+            Move(context.ReadValue<float>());
         }
 
         public override void Move(float direction)
         {
-            if (_t > 0)
-                return;
-            if (direction < -.5f)
-                direction = -1;
-            else if (direction > .5f)
-                direction = 1;
-            else
-                direction = 0;
-            if (direction == _lastDirection)
-                return;
-            if (transform.position.y + direction * Step < Clamp.y + direction * Step / 2 && transform.position.y + direction * Step > Clamp.x + direction * Step / 2)
-                transform.position += direction * Vector3.up * Step;
-            _lastDirection = direction;
+            _direction = direction;
+            Animator.SetInteger("Direction", Mathf.CeilToInt(direction));
         }
 
-        public override void Shoot(bool performed)
+        public void Shoot(InputAction.CallbackContext context)
         {
-            if (_t > 0)
-                return;
-            if (performed == _lastPerformerd)
-                return;
-            _lastPerformerd = performed;
-            if (!performed)
-                return;
-            GameObject obj = _objectPooler.SpawnFromPool("Bullets", BulletSpawner.position, BulletSpawner.rotation);
-            if (obj != null) 
-            {
-                _inputController.Vibrate(0, .75f, .2f);
-                if (obj.GetComponent<Damager>() != null)
-                    obj.GetComponent<Damager>().Damage = _statController.Damage;
-            }
+            if (context.performed)
+                Shoot();
+        }
+
+        public void Shoot()
+        {
+            
         }
 
         public void HealthUpdate()

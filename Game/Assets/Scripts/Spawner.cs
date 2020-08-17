@@ -1,55 +1,145 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts
 {
     public class Spawner : MonoBehaviour
     {
-        public static Spawner Instance;
+        public Vector2 SpawnRangeY;
+        public Vector2 RangeX;
+        public float Speed;
+        public float MinSpawnDistance;
+        public SpawnObject[] Objects;
 
-        public Vector2 MinRange;
-        public Vector2 MaxRange;
-        public Vector2Int Grid;
-        public string[] PoolTags;
+        private int _allCount;
+        private int _activeCount;
+        private Coroutine _coroutine;
+        private float _lastY;
+        private float _newY;
 
-        private ObjectPooler _objectPooler;
+        [Serializable] public struct SpawnObject
+        {
+            public GameObject prefab;
+            public int count;
+            [HideInInspector] public List<GameObject> objects;
+            [HideInInspector] public List<bool> activeObjects;
+            [HideInInspector] public Coroutine coroutine;
+        }
 
         private void Awake()
         {
-            Instance = this;
+            _allCount = 0;
+            for (int i = 0; i < Objects.Length; i++)
+            {
+                Objects[i].objects = new List<GameObject>();
+                Objects[i].activeObjects = new List<bool>();
+                for (int j = 0; j < Objects[i].count; j++)
+                {
+                    GameObject obj = Instantiate(Objects[i].prefab, transform);
+                    obj.SetActive(false);
+                    SpawnedObject s = obj.GetComponent<SpawnedObject>();
+                    if (s != null)
+                    {
+                        s.Spawner = this;
+                        s.ID = i;
+                        s.ObjectID = j;
+                    }
+                    Objects[i].objects.Add(obj);
+                    Objects[i].activeObjects.Add(false);
+                    _allCount++;
+                }
+            }
+            Spawn();
         }
 
-        private void Start()
+        private void Update()
         {
-            _objectPooler = ObjectPooler.Instance;
-            Spawn(0);
+            for (int i = 0; i < Objects.Length; i++)
+            {
+                for (int j = 0; j < Objects[i].objects.Count; j++)
+                {
+                    if (!Objects[i].activeObjects[j])
+                        continue;
+                    Objects[i].objects[j].transform.position = new Vector2(Objects[i].objects[j].transform.position.x - Time.deltaTime * Speed * StatController.Instance.Speed, Objects[i].objects[j].transform.position.y);
+                    if (Objects[i].objects[j].transform.position.x < RangeX.x)
+                    {
+                        Return(i, j);
+                    }
+                }
+            }
         }
 
-        public void Spawn(int id)
+        public void Spawn()
         {
-            float x = 0;
-            float y = 0;
-            if (MinRange.x == MaxRange.x)
-                x = MinRange.x;
-            else if (Grid.x > 0)
-                x = Random.Range(0, Grid.x) * (MaxRange.x - MinRange.x) / Grid.x + MinRange.x;
-            else
-                x = Random.Range(MinRange.x, MaxRange.x);
-            if (MinRange.y == MaxRange.y)
-                y = MinRange.y;
-            else if (Grid.y > 0)
-                y = Random.Range(0, Grid.y) * (MaxRange.y - MinRange.y) / (Grid.y - 1) + MinRange.y;
-            else
-                y = Random.Range(MinRange.y, MaxRange.y);
-            GameObject obj = _objectPooler.SpawnFromPool(PoolTags[id], new Vector3(x, y), Quaternion.identity);
-            //if (obj.GetComponent<Meteorite>() != null)
-            //    obj.GetComponent<Meteorite>().Speed = StatController.Instance.Speed;
+            if (_coroutine != null)
+            {
+                StopCoroutine(_coroutine);
+            }
+            _coroutine = StartCoroutine(SpawnCoroutine());
         }
 
-        public void SpawnAll(int id)
+        public IEnumerator SpawnCoroutine()
         {
-            while (_objectPooler.PoolDictionary[PoolTags[id]].Count > 0)
-                Spawn(id);
+            _newY = UnityEngine.Random.Range(SpawnRangeY.x, SpawnRangeY.y);
+            while (true)
+            {
+                if (_activeCount < _allCount)
+                {
+                    while (!SpawnByID(UnityEngine.Random.Range(0, Objects.Length), _newY)) { }
+                    _lastY = _newY;
+                    _newY = UnityEngine.Random.Range(SpawnRangeY.x, SpawnRangeY.y);
+                    float min = 0;
+                    if (MinSpawnDistance > Mathf.Abs(_lastY - _newY))
+                        min = Mathf.Sqrt(Mathf.Pow(MinSpawnDistance, 2) - Mathf.Pow(Mathf.Abs(_lastY = _newY), 2)) / Speed / StatController.Instance.Speed;
+                    if (min > (RangeX.y - RangeX.x) / _allCount / Speed / StatController.Instance.Speed)
+                        yield return new WaitForSeconds(min);
+                    else
+                    {
+                        if (_allCount > 1)
+                            yield return new WaitForSeconds(UnityEngine.Random.Range((RangeX.y - RangeX.x) / _allCount / Speed / StatController.Instance.Speed, (RangeX.y - RangeX.x) / (_allCount - 1) / Speed / StatController.Instance.Speed));
+                        else if (_allCount == 1)
+                            yield return new WaitForSeconds((RangeX.y - RangeX.x) / Speed / StatController.Instance.Speed);
+                    }
+                }
+                else
+                    yield return new WaitForSeconds(1);
+            }
+        }
+
+        public bool SpawnByID(int id, float y)
+        {
+            for (int i = 0; i < Objects[id].objects.Count; i++)
+            {
+                if (Objects[id].activeObjects[i])
+                    continue;
+                Objects[id].objects[i].SetActive(true);
+                Objects[id].objects[i].transform.position = new Vector2(RangeX.y, UnityEngine.Random.Range(SpawnRangeY.x, SpawnRangeY.y));
+                Objects[id].activeObjects[i] = true;
+                _activeCount++;
+                return true;
+            }
+            return false;
+        }
+
+        public void Return(int id, int objectID)
+        {
+            Objects[id].objects[objectID].SetActive(false);
+            Objects[id].activeObjects[objectID] = false;
+            _activeCount--;
+        }
+
+        public void ReturnAll()
+        {
+            for (int i = 0; i < Objects.Length; i++)
+            {
+                for (int j = 0; j < Objects[i].objects.Count; j++)
+                {
+                    if (Objects[i].activeObjects[j])
+                        Return(i, j);
+                }
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3a3d74f45d0a8d940a7d26944fdd9441
+guid: eedabf585a2e13d4baa591f8d849bbee
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -63,9 +63,9 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -75,9 +75,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -87,9 +87,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Windows Store Apps
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -99,9 +99,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: tvOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -111,9 +111,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: iPhone
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -123,9 +123,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Lumin
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -135,9 +135,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -147,9 +147,9 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: 4
+    maxTextureSize: 32
+    resizeAlgorithm: 1
+    textureFormat: 63
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0

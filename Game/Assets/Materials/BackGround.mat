@@ -262,6 +262,8 @@ Material:
     - _EmissiveColorLDR: {r: 0, g: 0, b: 0, a: 1}
     - _InvPrimScale: {r: 1, g: 1, b: 0, a: 0}
     - _IridescenceThicknessRemap: {r: 0, g: 1, b: 0, a: 0}
+    - _MainColor: {r: 0.5019608, g: 1, b: 1, a: 1}
+    - _SecondColor: {r: 1, g: 0.5019608, b: 0.5019608, a: 1}
     - _Size: {r: 256, g: 192, b: 0, a: 0}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _Speed: {r: 0.25, g: 0, b: 0, a: 0}
@@ -272,5 +274,5 @@ Material:
     - _UVDetailsMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
-    - _White: {r: 6.78534, g: 7.371727, b: 7.999999, a: 1}
+    - _White: {r: 3.372549, g: 3.6705883, b: 4, a: 1}
   m_BuildTextureStacks: []

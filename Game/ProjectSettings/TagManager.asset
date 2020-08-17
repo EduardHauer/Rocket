@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Bullet
   - Enemy
+  - Coin
+  - ColorTesterHidden
   layers:
   - Default
   - TransparentFX
