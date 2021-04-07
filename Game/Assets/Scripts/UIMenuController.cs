@@ -135,7 +135,7 @@ namespace Assets.Scripts
                 }
                 if (Objects[i].Text != null)
                 {
-                    Objects[i].Text.fontMaterial = new Material(Global.Instance.TextShader);
+                    Objects[i].Text.fontMaterial = new Material(Objects[i].Text.fontMaterial);
                     Objects[i].Text.fontMaterial.SetColor("_MainColor", Global.Instance.CurrentColorPalette.MainColor);
                     Objects[i].Text.fontMaterial.SetColor("_SecondColor", Global.Instance.CurrentColorPalette.SecondColor);
                     Objects[i].Text.fontMaterial.SetTexture("_FontTexture", Global.Instance.FontTexture);
